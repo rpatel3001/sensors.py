@@ -1,6 +1,10 @@
 sensors.py
 ==========
 
+Forked to add some convenience functions that emulate psutil but use the labels applied to lm-sensors (for use with my [modified s-tui](https://github.com/rpatel3001/s-tui)).
+
+--------
+
 [![Downloads](https://pepy.tech/badge/sensors-py)](https://pepy.tech/project/sensors-py)
 
 python bindings using ctypes for libsensors3 of the [lm-sensors project](https://github.com/lm-sensors/lm-sensors). The code was written against libsensors 3.3.4.  

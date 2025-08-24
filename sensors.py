@@ -285,3 +285,63 @@ class SubFeatureIterator:
     
     def next(self): # python2 compability
         return self.__next__()
+
+from dataclasses import dataclass
+@dataclass
+class shwtemp:
+    label: str
+    current: float = 0
+    high: float | None = None
+    critical: float | None = None
+
+def sensors_temperatures():
+    init()
+    ret = {}
+    for chip in ChipIterator():
+        chipname = chip_snprintf_name(chip).split("-")[0]
+        for feature in FeatureIterator(chip):
+            if feature.type == feature.TEMP:
+                new = shwtemp(label=get_label(chip, feature))
+                skip = len(feature.name)+1
+                for sf in SubFeatureIterator(chip, feature):
+                    name = sf.name[skip:].decode()
+                    val = get_value(chip, sf.number)
+                    if name == "input":
+                        new.current = val
+                    elif name == "max":
+                        new.high = val
+                    elif name == "crit":
+                        new.critical = val
+                if new.high and not new.critical:
+                    new.critical = new.high
+                if chipname not in ret:
+                    ret[chipname] = []
+                ret[chipname].append(new)
+    cleanup()
+    return ret
+
+@dataclass
+class sfan:
+    label: str
+    current: float = 0
+
+def sensors_fans():
+    init()
+    ret = {}
+    for chip in ChipIterator():
+        chipname = chip_snprintf_name(chip).split("-")[0]
+#        ret[chipname] = []
+        for feature in FeatureIterator(chip):
+            if feature.type == feature.FAN:
+                new = sfan(label=get_label(chip, feature))
+                skip = len(feature.name)+1
+                for sf in SubFeatureIterator(chip, feature):
+                    name = sf.name[skip:].decode()
+                    val = get_value(chip, sf.number)
+                    if name == "input":
+                        new.current = val
+                if chipname not in ret:
+                    ret[chipname] = []
+                ret[chipname].append(new)
+    cleanup()
+    return ret

@@ -5,6 +5,7 @@
 @copyright: The MIT License (MIT) <http://opensource.org/licenses/MIT>
 """
 
+from pprint import pprint
 import sensors
 
 def print_feature(chip, feature):
@@ -37,4 +38,8 @@ if __name__ == "__main__":
         for feature in sensors.FeatureIterator(chip):
             print_feature(chip, feature)
         
+
+    pprint(sensors.sensors_temperatures())
+    pprint(sensors.sensors_fans())
+
     sensors.cleanup()
